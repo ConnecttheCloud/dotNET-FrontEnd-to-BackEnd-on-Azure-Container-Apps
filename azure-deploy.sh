@@ -1,4 +1,4 @@
-RG="RG03"
+RG="RG04"
 LOCATION="southeastasia"
 ENVIRONMENT="env-apiapp03"
 STORE_APP="frontendaca009"
