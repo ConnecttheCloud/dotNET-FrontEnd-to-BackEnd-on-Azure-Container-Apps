@@ -1,0 +1,35 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  
+name: AzureCLISample
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Checkout
+      uses: actions/checkout@v1
+      
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az extension add --name containerapp --upgrade
+          az provider register --namespace Microsoft.App
+          az provider register --namespace Microsoft.OperationalInsights
+          chmod +x $GITHUB_WORKSPACE/azure-deploy.sh
+          $GITHUB_WORKSPACE/azure-deploy.sh
