@@ -32,7 +32,7 @@ az containerapp create \
   --registry-server $ACR_NAME.azurecr.io \
   --query properties.configuration.ingress.fqdn
 
-az acr build --registry $ACR_NAME --image $STORE_APP -f ./dotNET-FrontEnd-to-BackEnd-on-Azure-Container-Apps/src/Store/Dockerfile ./src/
+az acr build --registry $ACR_NAME --image $STORE_APP -f ./src/Store/Dockerfile ./src/
 
 az identity create --resource-group $RG --name myACRId
 
