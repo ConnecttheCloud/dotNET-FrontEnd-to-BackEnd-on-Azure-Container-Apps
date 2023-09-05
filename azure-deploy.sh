@@ -4,6 +4,9 @@ ENVIRONMENT="env-apiapp03"
 STORE_APP="frontendaca009"
 ACR_NAME="testdemoacr01"
 
+pwd
+echo $(pwd)
+
 az group create -n $RG --location $LOCATION
 
 az acr create \
@@ -29,10 +32,9 @@ az containerapp create \
   --registry-server $ACR_NAME.azurecr.io \
   --query properties.configuration.ingress.fqdn
 
+az acr build --registry $ACR_NAME --image $STORE_APP -f ./dotNET-FrontEnd-to-BackEnd-on-Azure-Container-Apps/src/Store/Dockerfile ./src/
 
 az identity create --resource-group $RG --name myACRId
-
-az acr build --registry $ACR_NAME --image $STORE_APP -f ./dotNET-FrontEnd-to-BackEnd-on-Azure-Container-Apps/src/Store/Dockerfile ./src/
 
 # Get resource ID of the user-assigned identity
 userID=$(az identity show --resource-group $RG --name myACRId --query id --output tsv)
