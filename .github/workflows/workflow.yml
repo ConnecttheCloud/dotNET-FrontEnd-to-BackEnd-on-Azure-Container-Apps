@@ -13,12 +13,12 @@ jobs:
     steps:
 
     - name: Azure Login
-      uses: azure/login@v2
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       
     - name: Azure CLI script file
       uses: azure/CLI@v1
