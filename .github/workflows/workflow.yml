@@ -7,7 +7,6 @@ on:
       - src/**
       - .github/**
 
-  
 name: AzureCLISample
 
 jobs:
