@@ -13,6 +13,7 @@ env:
   INVENTORY_APP: inventoryapiapp008
   PRODUCT_APP: productapiapp007
   RG: RG04
+  ENVIRONMENT: env-apiapp03
   
 name: Building images and resources
 
@@ -116,13 +117,38 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az containerapp up \
+          --name $INVENTORY_APP \
+          --image testdemoacr01.azurecr.io/$INVENTORY_APP:latest \
+          --resource-group $RG \
+          --environment $ENVIRONMENT \
+          --ingress internal \
+          --target-port 80
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az containerapp up \
+          --name $PRODUCT_APP \
+          --image testdemoacr01.azurecr.io/$PRODUCT_APP:latest \
+          --resource-group $RG \
+          --environment $ENVIRONMENT \
+          --ingress internal \
+          --target-port 80
+
     - name: deploy store container
       uses: azure/container-apps-deploy-action@v1
       with:
         imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
         containerAppName: $STORE_APP
+        containerAppEnvironment: $ENVIRONMENT
         resourceGroup: $RG
         environmentVariables: |
-          'ProductsApi=http://$PRODUCT_APP'
-          'InventoryApi=http://$INVENTORY_APP'
-          'ASPNETCORE_ENVIRONMENT=Development'
+          'ProductsApi=http://$PRODUCT_APP' 'InventoryApi=http://$INVENTORY_APP' 'ASPNETCORE_ENVIRONMENT=Development'
