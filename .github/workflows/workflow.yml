@@ -6,7 +6,13 @@ on:
     paths:
       - src/**
       - .github/**
-
+env:
+  ACR_NAME: testdemoacr01
+  STORE_APP: frontendaca009
+  DOCKERFILE: src/Store/Dockerfile
+  INVENTORY_APP: inventoryapiapp008
+  PRODUCT_APP: productapiapp007
+  
 name: AzureCLISample
 
 jobs:
@@ -35,7 +41,7 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/azure-deploy.sh
           $GITHUB_WORKSPACE/azure-deploy.sh
 
-  build-containerimage:
+  build-storeimage:
     runs-on: ubuntu-latest
     needs: resource-build
 
@@ -50,13 +56,52 @@ jobs:
 
     - name: Azure CLI script file
       uses: azure/CLI@v1
-      env:
-        ACR_NAME: testdemoacr01
-        STORE_APP: frontendaca009
-        DOCKERFILE: src/Store/Dockerfile
+      # env:
+      #   ACR_NAME: testdemoacr01
+      #   STORE_APP: frontendaca009
+      #   DOCKERFILE: src/Store/Dockerfile
       with:
         azcliversion: 2.52.0
         inlineScript: |
           pwd
           az acr build --registry $ACR_NAME --image $STORE_APP -f $GITHUB_WORKSPACE/$DOCKERFILE ./src/
 
+  build-inventoryimage:
+    runs-on: ubuntu-latest
+    needs: resource-build
+
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az acr build --registry $ACR_NAME --image $INVENTORY_APP -f $GITHUB_WORKSPACE/src/Store.InventoryApi/Dockerfile ./src/
+
+  build-productimage:
+    runs-on: ubuntu-latest
+    needs: resource-build
+
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az acr build --registry $ACR_NAME --image $PRODUCT_APP -f $GITHUB_WORKSPACE/src/Store.ProductApi/Dockerfile ./src/
