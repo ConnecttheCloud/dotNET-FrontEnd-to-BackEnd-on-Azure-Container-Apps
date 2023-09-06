@@ -143,14 +143,24 @@ jobs:
           --ingress internal \
           --target-port 80
 
-    - name: Deploy Store-APP
-      uses: azure/CLI@v1
+    - name: deploy store container
+      uses: azure/container-apps-deploy-action@v1
       with:
-        azcliversion: 2.52.0
-        inlineScript: |
-          az containerapp update -n $STORE_APP \ 
-          -g $RG \
-          --image testdemoacr01.azurecr.io/$STORE_APP:latest \
-          --set-env-vars 'ProductsApi=http://$PRODUCT_APP'  \
-          --set-env-vars 'InventoryApi=http://$INVENTORY_APP' \ 
-          --set-env-vars 'ASPNETCORE_ENVIRONMENT=Development'
+        imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
+        containerAppName: $STORE_APP
+        containerAppEnvironment: $ENVIRONMENT
+        resourceGroup: $RG
+        environmentVariables: |
+          'ProductsApi=http://$PRODUCT_APP' 'InventoryApi=http://$INVENTORY_APP' 'ASPNETCORE_ENVIRONMENT=Development'
+
+    #  - name: Deploy Store-APP
+    #   uses: azure/CLI@v1
+    #   with:
+    #     azcliversion: 2.52.0
+    #     inlineScript: |
+    #       az containerapp update -n $STORE_APP \ 
+    #       -g $RG \
+    #       --image testdemoacr01.azurecr.io/$STORE_APP:latest \
+    #       --set-env-vars 'ProductsApi=http://$PRODUCT_APP'  \
+    #       --set-env-vars 'InventoryApi=http://$INVENTORY_APP' \ 
+    #       --set-env-vars 'ASPNETCORE_ENVIRONMENT=Development'
