@@ -1,14 +1,15 @@
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+
   
 name: AzureCLISample
 
 jobs:
-
-  build:
+  resource-build:
+    # name: Building container and provisioning Azure Resources
     runs-on: ubuntu-latest
     steps:
 
@@ -19,7 +20,7 @@ jobs:
         
     - name: Checkout
       uses: actions/checkout@v2
-      
+
     - name: Azure CLI script file
       uses: azure/CLI@v1
       with:
@@ -31,3 +32,29 @@ jobs:
           az provider register --namespace Microsoft.OperationalInsights
           chmod +x $GITHUB_WORKSPACE/azure-deploy.sh
           $GITHUB_WORKSPACE/azure-deploy.sh
+
+  build-containerimage:
+    runs-on: ubuntu-latest
+    needs: resource-build
+
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    # - name: Checkout
+    #   uses: actions/checkout@v2
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      env:
+        ACR_NAME: testdemoacr01
+        STORE_APP: frontendaca009
+        DOCKERFILE: src/Store/Dockerfile
+      run: pwd
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az acr build --registry $ACR_NAME --image $STORE_APP -f $GITHUB_WORKSPACE/$DOCKERFILE ./src/
+
