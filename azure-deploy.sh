@@ -3,6 +3,7 @@ LOCATION="southeastasia"
 ENVIRONMENT="env-apiapp03"
 STORE_APP="frontendaca009"
 ACR_NAME="testdemoacr01"
+WORKSPACE_NAME="workspace10011"
 
 echo $(pwd)
 ls -al
@@ -15,12 +16,19 @@ az acr create \
   --sku Basic \
   --admin-enabled true
 
+az monitor log-analytics workspace create \
+  --resource-group $RG \
+  --workspace-name $WORKSPACE_NAME
+
+workspace_id=$(az monitor log-analytics workspace show --resource-group RG04 --workspace-name $WORKSPACE_NAME --query customerId -o tsv)
+workspace_key=$(az monitor log-analytics workspace get-shared-keys --resource-group $RG --workspace-name $WORKSPACE_NAME --query primarySharedKey -otsv)
+
 #create container App Env:
 az containerapp env create \
   --name $ENVIRONMENT \
   --resource-group $RG \
-  --logs-workspace-id myLogsWorkspaceID \
-  --logs-workspace-key myLogsWorkspaceKey \
+  --logs-workspace-id $workspace_id \
+  --logs-workspace-key $workspace_key \
   --location $LOCATION
 
 #Create Container App with helloworld image
