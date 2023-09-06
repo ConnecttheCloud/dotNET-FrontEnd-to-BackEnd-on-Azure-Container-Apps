@@ -36,7 +36,8 @@ az containerapp create \
   --name $STORE_APP \
   --resource-group $RG \
   --environment $ENVIRONMENT \
-  --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+  --image mcr.microsoft.com/azuredocs/aci-helloworld \
+  # --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
   --target-port 80 \
   --ingress 'external' \
   # --registry-server $ACR_NAME.azurecr.io \
