@@ -4,8 +4,8 @@ ENVIRONMENT="env-apiapp03"
 STORE_APP="frontendaca009"
 ACR_NAME="testdemoacr01"
 
-pwd
 echo $(pwd)
+ls -al
 
 az group create -n $RG --location $LOCATION
 
@@ -19,6 +19,8 @@ az acr create \
 az containerapp env create \
   --name $ENVIRONMENT \
   --resource-group $RG \
+  --logs-workspace-id myLogsWorkspaceID \
+  --logs-workspace-key myLogsWorkspaceKey \
   --location $LOCATION
 
 #Create Container App with helloworld image
@@ -32,7 +34,7 @@ az containerapp create \
   --registry-server $ACR_NAME.azurecr.io \
   --query properties.configuration.ingress.fqdn
 
-az acr build --registry $ACR_NAME --image $STORE_APP -f ./src/Store/Dockerfile ./src/
+# az acr build --registry $ACR_NAME --image $STORE_APP -f ./src/Store/Dockerfile ./src/
 
 az identity create --resource-group $RG --name myACRId
 
