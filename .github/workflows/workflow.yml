@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - src/**
+      - .github/**
 
   
 name: AzureCLISample
@@ -27,9 +30,9 @@ jobs:
         azcliversion: 2.52.0
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          az extension add --name containerapp --upgrade
-          az provider register --namespace Microsoft.App
-          az provider register --namespace Microsoft.OperationalInsights
+          # az extension add --name containerapp --upgrade
+          # az provider register --namespace Microsoft.App
+          # az provider register --namespace Microsoft.OperationalInsights
           chmod +x $GITHUB_WORKSPACE/azure-deploy.sh
           $GITHUB_WORKSPACE/azure-deploy.sh
 
@@ -57,4 +60,3 @@ jobs:
         inlineScript: |
           pwd
           az acr build --registry $ACR_NAME --image $STORE_APP -f $GITHUB_WORKSPACE/$DOCKERFILE ./src/
-
