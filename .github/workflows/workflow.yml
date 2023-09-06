@@ -19,7 +19,7 @@ name: Building images and resources
 
 jobs:
   resource-build:
-    # name: Building container and provisioning Azure Resources
+    name: Building container and provisioning Azure Resources
     runs-on: ubuntu-latest
     steps:
 
