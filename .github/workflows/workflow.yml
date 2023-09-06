@@ -41,6 +41,7 @@ jobs:
           # az provider register --namespace Microsoft.App
           # az provider register --namespace Microsoft.OperationalInsights
           chmod +x $GITHUB_WORKSPACE/azure-deploy.sh
+          echo "Running the deployment script"
           $GITHUB_WORKSPACE/azure-deploy.sh
 
   build-storeimage:
@@ -65,6 +66,7 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          echo "Build container image and push to ACR"
           az acr build --registry $ACR_NAME --image $STORE_APP -f $GITHUB_WORKSPACE/$DOCKERFILE ./src/
 
   build-inventoryimage:
@@ -85,6 +87,7 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          echo "Build container image and push to ACR"
           az acr build --registry $ACR_NAME --image $INVENTORY_APP -f $GITHUB_WORKSPACE/src/Store.InventoryApi/Dockerfile ./src/
 
   build-productimage:
@@ -105,6 +108,7 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          echo "Build container image and push to ACR"
           az acr build --registry $ACR_NAME --image $PRODUCT_APP -f $GITHUB_WORKSPACE/src/Store.ProductApi/Dockerfile ./src/
 
   Deploy_images:
@@ -122,6 +126,7 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          echo "Updating container app with ACR image"
           az containerapp update -n $INVENTORY_APP -g $RG -i $ACR_NAME.azurecr.io/$INVENTORY_APP:latest
           # az containerapp up \
           # --name $INVENTORY_APP \
@@ -137,6 +142,7 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          echo "Updating container app with ACR image"
           az containerapp update -n $PRODUCT_APP -g $RG -i $ACR_NAME.azurecr.io/$PRODUCT_APP:latest
           
           # az containerapp up \
