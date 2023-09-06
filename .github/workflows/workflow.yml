@@ -114,11 +114,11 @@ jobs:
     - name: Log in to Azure
       uses: azure/login@v1
       with:
-      creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Build and deploy Container App
+    - name: deploy store container
       uses: azure/container-apps-deploy-action@v1
       with:
-      imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
-      containerAppName: $STORE_APP
-      resourceGroup: $RG
+        imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
+        containerAppName: $STORE_APP
+        resourceGroup: $RG
