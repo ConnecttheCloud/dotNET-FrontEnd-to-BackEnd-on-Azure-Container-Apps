@@ -12,8 +12,9 @@ env:
   DOCKERFILE: src/Store/Dockerfile
   INVENTORY_APP: inventoryapiapp008
   PRODUCT_APP: productapiapp007
+  RG: RG04
   
-name: AzureCLISample
+name: Building images and resources
 
 jobs:
   resource-build:
@@ -29,7 +30,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Azure CLI script file
+    - name: Run AzureCLI script
       uses: azure/CLI@v1
       with:
         azcliversion: 2.52.0
@@ -54,7 +55,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Azure CLI script file
+    - name: Run AzureCLI script
       uses: azure/CLI@v1
       # env:
       #   ACR_NAME: testdemoacr01
@@ -105,3 +106,19 @@ jobs:
         azcliversion: 2.52.0
         inlineScript: |
           az acr build --registry $ACR_NAME --image $PRODUCT_APP -f $GITHUB_WORKSPACE/src/Store.ProductApi/Dockerfile ./src/
+
+  Deploy_images:
+    runs-on: ubuntu-latest
+    needs: build-storeimage
+    steps:
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+      creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and deploy Container App
+      uses: azure/container-apps-deploy-action@v1
+      with:
+      imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
+      containerAppName: $STORE_APP
+      resourceGroup: $RG
