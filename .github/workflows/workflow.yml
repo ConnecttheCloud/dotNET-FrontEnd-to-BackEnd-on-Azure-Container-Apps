@@ -117,7 +117,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy INVENTORY_APP:
+    - name: Deploy INVENTORY_APP
       uses: azure/CLI@v1
       with:
         azcliversion: 2.52.0
