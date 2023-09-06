@@ -117,7 +117,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure CLI script file
+    - name: Deploy INVENTORY_APP:
       uses: azure/CLI@v1
       with:
         azcliversion: 2.52.0
@@ -130,7 +130,7 @@ jobs:
           --ingress internal \
           --target-port 80
 
-    - name: Azure CLI script file
+    - name: Deploy PRODUCT_APP
       uses: azure/CLI@v1
       with:
         azcliversion: 2.52.0
@@ -143,12 +143,12 @@ jobs:
           --ingress internal \
           --target-port 80
 
-    - name: deploy store container
-      uses: azure/container-apps-deploy-action@v1
+    - name: Deploy Store-APP
+      uses: azure/CLI@v1
       with:
-        imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
-        containerAppName: $STORE_APP
-        containerAppEnvironment: $ENVIRONMENT
-        resourceGroup: $RG
-        environmentVariables: |
-          'ProductsApi=http://$PRODUCT_APP' 'InventoryApi=http://$INVENTORY_APP' 'ASPNETCORE_ENVIRONMENT=Development'
+        azcliversion: 2.52.0
+        inlineScript: |
+          az containerapp update -n $STORE_APP \ 
+          -g $RG \
+          --image testdemoacr01.azurecr.io/$STORE_APP:latest \
+          --set-env-vars 'ProductsApi=http://$PRODUCT_APP' 'InventoryApi=http://$INVENTORY_APP' 'ASPNETCORE_ENVIRONMENT=Development'
