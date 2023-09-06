@@ -6,6 +6,7 @@ ACR_NAME="testdemoacr01"
 WORKSPACE_NAME="workspace10011"
 
 echo $(pwd)
+ls -al
 
 az group create -n $RG --location $LOCATION
 
@@ -38,17 +39,7 @@ az containerapp create \
   --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
   --target-port 80 \
   --ingress 'external' \
-  --registry-server $ACR_NAME.azurecr.io \
-  --query properties.configuration.ingress.fqdn
-
-az containerapp create \
-  --name $STORE_APP \
-  --resource-group $RG \
-  --environment $ENVIRONMENT \
-  --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
-  --target-port 80 \
-  --ingress 'external' \
-  --registry-server $ACR_NAME.azurecr.io \
+  # --registry-server $ACR_NAME.azurecr.io \
   --query properties.configuration.ingress.fqdn
 
 # az acr build --registry $ACR_NAME --image $STORE_APP -f ./src/Store/Dockerfile ./src/
