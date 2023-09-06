@@ -40,10 +40,10 @@ jobs:
     needs: resource-build
 
     steps:
-    # - name: Azure Login
-    #   uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - name: Checkout
       uses: actions/checkout@v2
@@ -59,3 +59,4 @@ jobs:
         inlineScript: |
           pwd
           az acr build --registry $ACR_NAME --image $STORE_APP -f $GITHUB_WORKSPACE/$DOCKERFILE ./src/
+
