@@ -37,11 +37,11 @@ az containerapp create \
   --resource-group $RG \
   --environment $ENVIRONMENT \
   --image mcr.microsoft.com/azuredocs/aci-helloworld \
-  # --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
   --target-port 80 \
   --ingress 'external' \
-  # --registry-server $ACR_NAME.azurecr.io \
   --query properties.configuration.ingress.fqdn
+  # --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+  # --registry-server $ACR_NAME.azurecr.io \
 
 # az acr build --registry $ACR_NAME --image $STORE_APP -f ./src/Store/Dockerfile ./src/
 az identity create --resource-group $RG --name myACRId
