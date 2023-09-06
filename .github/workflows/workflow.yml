@@ -122,3 +122,4 @@ jobs:
         imageToDeploy: testdemoacr01.azurecr.io/$STORE_APP:latest
         containerAppName: $STORE_APP
         resourceGroup: $RG
+        environmentVariables: 'ProductsApi=http://$PRODUCT_APP' 'InventoryApi=http://$INVENTORY_APP' 'ASPNETCORE_ENVIRONMENT=Development'
