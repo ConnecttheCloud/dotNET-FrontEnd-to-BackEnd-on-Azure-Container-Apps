@@ -1,3 +1,5 @@
+[![Github Action](https://github.com/ConnecttheCloud/dotNET-FrontEnd-to-BackEnd-on-Azure-Container-Apps/blob/main/.github/workflows/workflow.yml)
+
 # ASP.NET Core Front-end + 2 Back-end APIs on Azure Container Apps
 
 This repository contains a simple scenario built to demonstrate how ASP.NET Core 6.0 can be used to build a cloud-native application hosted in Azure Container Apps. The repository consists of the following projects and folders:
