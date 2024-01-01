@@ -6,6 +6,7 @@ on:
     paths:
       - src/**
       - .github/**
+      
 env:
   ACR_NAME: testdemoacr01
   STORE_APP: frontendaca009
